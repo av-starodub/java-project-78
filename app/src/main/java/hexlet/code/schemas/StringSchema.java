@@ -3,10 +3,10 @@ package hexlet.code.schemas;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 public final class StringSchema {
-    private final List<Function<String, Boolean>> validations;
+    private final List<Predicate<String>> validations;
 
     public StringSchema() {
         validations = new ArrayList<>();
@@ -14,7 +14,7 @@ public final class StringSchema {
 
     public boolean isValid(String string) {
         for (var isValid : validations) {
-            if (!isValid.apply(string)) {
+            if (!isValid.test(string)) {
                 return false;
             }
         }

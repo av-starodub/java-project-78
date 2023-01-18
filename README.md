@@ -3,7 +3,7 @@
 [![Actions Status](https://github.com/av-starodub/java-project-78/workflows/hexlet-check/badge.svg)](https://github.com/av-starodub/java-project-78/actions)
 [![Java CI](https://github.com/av-starodub/java-project-78/actions/workflows/javaci.yml/badge.svg)](https://github.com/av-starodub/java-project-78/actions/workflows/javaci.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/c5080706082f1aa339c4/maintainability)](https://codeclimate.com/github/av-starodub/java-project-78/maintainability)
-
+[![codecov](https://codecov.io/github/av-starodub/java-project-78/branch/main/graph/badge.svg?token=D6t7Qh4d9y)](https://codecov.io/github/av-starodub/java-project-78)
 ### Описание
 
 Валидатор данных – библиотека, с помощью которой можно проверять корректность любых данных.
