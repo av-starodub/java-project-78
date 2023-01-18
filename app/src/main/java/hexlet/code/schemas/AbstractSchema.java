@@ -13,6 +13,12 @@ public abstract class AbstractSchema<T> implements BaseSchema {
         validations = new ArrayList<>();
         isValidNull = true;
     }
+
+    /**
+     *
+     * @param value any.
+     * @return true if value is valid for a specific schema implementation.
+     */
     @Override
     public boolean isValid(Object value) {
         if (Objects.isNull(value)) {
