@@ -8,11 +8,9 @@ import java.util.function.Predicate;
 public abstract class AbstractSchema<T> {
     protected final List<Predicate<T>> validations;
     protected boolean isValidNull;
-    private final Class<T> validatorType;
 
-    protected AbstractSchema(Class<T> type) {
-        this.validations = new ArrayList<>();
-        validatorType = type;
+    protected AbstractSchema() {
+        validations = new ArrayList<>();
         isValidNull = true;
     }
 
@@ -31,11 +29,9 @@ public abstract class AbstractSchema<T> {
         return true;
     }
 
-    protected abstract T doCast(Object value);
+    protected abstract boolean nonValidValueType(Object value);
 
-    private boolean nonValidValueType(Object value) {
-        return !validatorType.equals(value.getClass());
-    }
+    protected abstract T doCast(Object value);
 
     private boolean nonValidValue(Predicate<T> validation, T value) {
         return !validation.test(value);

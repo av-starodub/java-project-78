@@ -2,7 +2,7 @@ package hexlet.code.schemas;
 
 public final class StringSchema extends AbstractSchema<String> {
     public StringSchema() {
-        super(String.class);
+        super();
     }
 
     public void required() {
@@ -18,6 +18,11 @@ public final class StringSchema extends AbstractSchema<String> {
     public StringSchema contains(String substring) {
         validations.add(string -> string.contains(substring));
         return this;
+    }
+
+    @Override
+    protected boolean nonValidValueType(Object value) {
+        return !(value instanceof String);
     }
 
     @Override

@@ -83,10 +83,18 @@ public final class NumberSchemaTest {
     }
 
     @Test
-    public void shouldReturnFalseIfNumberOutOfRange() {
+    public void shouldReturnFalseIfNumberOutOfRangeUp() {
         var schema = validator.number();
-        var outOfRange = 11;
-        var isValidOutOfRange = schema.range(minOfRange, minOfRange).isValid(outOfRange);
+        var outOfRangeUp = 11;
+        var isValidOutOfRange = schema.range(minOfRange, minOfRange).isValid(outOfRangeUp);
         assertThat(isValidOutOfRange).isFalse();
     }
+    @Test
+    public void shouldReturnFalseIfNumberOutOfRangeDown() {
+        var schema = validator.number();
+        var outOfRangeDown = 3;
+        var isValidOutOfRange = schema.range(minOfRange, minOfRange).isValid(outOfRangeDown);
+        assertThat(isValidOutOfRange).isFalse();
+    }
+
 }

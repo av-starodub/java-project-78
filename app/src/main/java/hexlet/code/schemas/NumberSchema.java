@@ -3,7 +3,7 @@ package hexlet.code.schemas;
 public final class NumberSchema extends AbstractSchema<Integer> {
 
     public NumberSchema() {
-        super(Integer.class);
+        super();
     }
 
     public NumberSchema required() {
@@ -19,6 +19,11 @@ public final class NumberSchema extends AbstractSchema<Integer> {
     public NumberSchema range(Integer min, Integer max) {
         validations.add(number -> number >= min && number <= max);
         return this;
+    }
+
+    @Override
+    protected boolean nonValidValueType(Object value) {
+        return !(value instanceof Integer);
     }
 
     @Override
