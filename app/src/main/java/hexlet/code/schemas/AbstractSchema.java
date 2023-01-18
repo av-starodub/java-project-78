@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public abstract class AbstractSchema<T> {
+public abstract class AbstractSchema<T> implements BaseSchema {
     protected final List<Predicate<T>> validations;
     protected boolean isValidNull;
 
@@ -13,8 +13,8 @@ public abstract class AbstractSchema<T> {
         validations = new ArrayList<>();
         isValidNull = true;
     }
-
-    public final boolean isValid(Object value) {
+    @Override
+    public boolean isValid(Object value) {
         if (Objects.isNull(value)) {
             return isValidNull;
         }

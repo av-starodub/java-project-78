@@ -5,9 +5,10 @@ public final class StringSchema extends AbstractSchema<String> {
         super();
     }
 
-    public void required() {
+    public StringSchema required() {
         isValidNull = false;
         validations.add(string -> !string.isEmpty());
+        return this;
     }
 
     public StringSchema minLength(int minimum) {
