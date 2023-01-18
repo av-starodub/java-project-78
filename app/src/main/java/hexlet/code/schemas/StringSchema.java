@@ -1,32 +1,12 @@
 package hexlet.code.schemas;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Predicate;
-
-public final class StringSchema {
-    private final List<Predicate<String>> validations;
-
+public final class StringSchema extends AbstractSchema<String> {
     public StringSchema() {
-        validations = new ArrayList<>();
-    }
-
-    public boolean isValid(String string) {
-        for (var isValid : validations) {
-            if (!isValid.test(string)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean isValid(Object ignoredValue) {
-        return false;
+        super(String.class);
     }
 
     public void required() {
-        validations.add(Objects::nonNull);
+        isValidNull = false;
         validations.add(string -> !string.isEmpty());
     }
 
@@ -38,5 +18,10 @@ public final class StringSchema {
     public StringSchema contains(String substring) {
         validations.add(string -> string.contains(substring));
         return this;
+    }
+
+    @Override
+    protected String doCast(Object value) {
+        return (String) value;
     }
 }

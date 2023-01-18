@@ -1,34 +1,9 @@
 package hexlet.code.schemas;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Predicate;
-
-public final class NumberSchema {
-    private final List<Predicate<Integer>> validations;
-
-    private boolean isValidNull;
+public final class NumberSchema extends AbstractSchema<Integer> {
 
     public NumberSchema() {
-        validations = new ArrayList<>();
-        isValidNull = true;
-    }
-
-    public boolean isValid(Integer number) {
-        if (Objects.isNull(number)) {
-            return isValidNull;
-        }
-        for (var validation : validations) {
-            if (!validation.test(number)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean isValid(Object ignoredValue) {
-        return false;
+        super(Integer.class);
     }
 
     public NumberSchema required() {
@@ -44,5 +19,10 @@ public final class NumberSchema {
     public NumberSchema range(Integer min, Integer max) {
         validations.add(number -> number >= min && number <= max);
         return this;
+    }
+
+    @Override
+    protected Integer doCast(Object value) {
+        return (Integer) value;
     }
 }
