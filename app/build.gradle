@@ -1,16 +1,12 @@
 plugins {
-    id 'java'
     id 'application'
     id 'checkstyle'
-    id 'com.adarshr.test-logger' version '3.1.0'
+    id 'com.adarshr.test-logger' version '4.0.0'
     id 'se.patrikerdes.use-latest-versions' version '0.2.18'
-    id 'com.github.ben-manes.versions' version '0.42.0'
+    id 'com.github.ben-manes.versions' version '0.51.0'
     id 'jacoco'
-    id 'net.ltgt.errorprone' version '2.0.2'
+    id 'net.ltgt.errorprone' version '3.1.0'
 }
-
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
 
 group 'hexlet.code'
 version '1.0-SNAPSHOT'
@@ -20,7 +16,7 @@ repositories {
 }
 
 compileJava {
-    options.release = 17
+    options.release = 20
 }
 
 application {
@@ -29,14 +25,14 @@ application {
 
 
 dependencies {
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
 
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
     testImplementation(
-            'org.junit.jupiter:junit-jupiter-params:5.8.2',
-            'org.assertj:assertj-core:3.22.0'
+            'org.junit.jupiter:junit-jupiter-params:5.10.2',
+            'org.assertj:assertj-core:3.25.3'
     )
-    errorprone 'com.google.errorprone:error_prone_core:2.11.0'
+    errorprone 'com.google.errorprone:error_prone_core:2.26.1'
 }
 
 test {
@@ -49,8 +45,9 @@ testlogger {
 }
 
 jacoco {
-    toolVersion = "0.8.8"
+    toolVersion = "0.8.9"
 }
+
 jacocoTestReport {
     dependsOn test
     reports {
