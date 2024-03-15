@@ -15,10 +15,10 @@
 Пример использования:
 ```
 import hexlet.code.Validator;
-import hexlet.code.schemas.StringSchema;
-import hexlet.code.schemas.NumberSchema;
-import hexlet.code.schemas.MapSchema;
-import hexlet.code.schemas.BaseSchema;
+import hexlet.code.schema.StringSchema;
+import hexlet.code.schema.NumberSchema;
+import hexlet.code.schema.MapSchema;
+import hexlet.code.schema.base.Schema;
 
 Validator v = new Validator();
 

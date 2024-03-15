@@ -1,12 +1,18 @@
-package hexlet.code.schemas;
+package hexlet.code.schema;
 
-public final class StringSchema extends AbstractSchema<String> {
+public final class StringSchema extends BaseSchema<String> {
+
     public StringSchema() {
         super();
     }
 
+    /**
+     * Sets null && empty string as invalid.
+     *
+     * @return StringSchema instance.
+     */
     public StringSchema required() {
-        isValidNull = false;
+        super.required();
         validations.add(string -> !string.isEmpty());
         return this;
     }
@@ -22,8 +28,8 @@ public final class StringSchema extends AbstractSchema<String> {
     }
 
     @Override
-    protected boolean nonValidValueType(Object value) {
-        return !(value instanceof String);
+    protected boolean isInstanceOf(Object value) {
+        return value instanceof String;
     }
 
     @Override
