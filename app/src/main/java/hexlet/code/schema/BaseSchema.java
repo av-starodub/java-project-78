@@ -18,10 +18,10 @@ public abstract class BaseSchema<T> {
     private final Function<Object, Boolean> instanceOf;
     private boolean isNullValid;
 
-    protected BaseSchema(Function<Object, T> dC, Function<Object, Boolean> insOf) {
+    protected BaseSchema(Function<Object, T> dCast, Function<Object, Boolean> instOf) {
         validations = new ArrayList<>();
-        doCast = dC;
-        instanceOf = insOf;
+        doCast = dCast;
+        instanceOf = instOf;
         isNullValid = true;
     }
 

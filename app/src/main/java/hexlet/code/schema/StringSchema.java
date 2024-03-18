@@ -9,7 +9,7 @@ public final class StringSchema extends BaseSchema<String> {
     /**
      * Sets null && empty string as invalid.
      *
-     * @return StringSchema instance.
+     * @return StringSchema.
      */
     public StringSchema required() {
         setNotNull();

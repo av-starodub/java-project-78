@@ -18,18 +18,18 @@ public final class MapSchema extends BaseSchema<Map<?, ?>> {
         return this;
     }
 
-    public MapSchema shape(Map<?, BaseSchema<?>> setOfSchemas) {
-        addTest(map -> checkInside(map, setOfSchemas));
+    public MapSchema shape(Map<?, BaseSchema<?>> schemaMap) {
+        addTest(map -> isValidInside(map, schemaMap));
         return this;
     }
 
-    private boolean checkInside(Map<?, ?> data, Map<?, BaseSchema<?>> setOfSchemas) {
-        return setOfSchemas.entrySet().stream()
-                .allMatch(e -> {
-                    var propertyName = e.getKey();
-                    var propertyValue = data.get(propertyName);
-                    var schema = e.getValue();
-                    return data.containsKey(propertyName) && schema.isValid(propertyValue);
+    private boolean isValidInside(Map<?, ?> data, Map<?, BaseSchema<?>> schemaMap) {
+        return schemaMap.entrySet().stream()
+                .allMatch(schemaEntry -> {
+                    var requiredPropertyName = schemaEntry.getKey();
+                    var propertyValue = data.get(requiredPropertyName);
+                    var schema = schemaEntry.getValue();
+                    return data.containsKey(requiredPropertyName) && schema.isValid(propertyValue);
                 });
     }
 }
