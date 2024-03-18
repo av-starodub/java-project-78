@@ -2,31 +2,27 @@ package hexlet.code.schema;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
+import static java.util.Objects.isNull;
+
 /**
- * Base class for implementing Schema.
+ * Base class for implementing a data validation schema.
  *
- * @param <T> data type to validate.
+ * @param <T> data type for validation function.
  */
 public abstract class BaseSchema<T> {
-    protected final List<Predicate<T>> validations;
-    protected boolean isNullValid;
+    private final List<Predicate<T>> validations;
+    private final Function<Object, T> doCast;
+    private final Function<Object, Boolean> instanceOf;
+    private boolean isNullValid;
 
-    protected BaseSchema() {
+    protected BaseSchema(Function<Object, T> dC, Function<Object, Boolean> insOf) {
         validations = new ArrayList<>();
+        doCast = dC;
+        instanceOf = insOf;
         isNullValid = true;
-    }
-
-    /**
-     * The method sets null as invalid.
-     *
-     * @return a specific schema implementation.
-     */
-    public BaseSchema<T> required() {
-        isNullValid = false;
-        return this;
     }
 
     /**
@@ -35,23 +31,21 @@ public abstract class BaseSchema<T> {
      * @param value any.
      * @return true if the value has passed all assigned checks for a specific schema implementation.
      */
-    public boolean isValid(Object value) {
-        if (Objects.isNull(value)) {
+    public final boolean isValid(Object value) {
+        if (isNull(value)) {
             return isNullValid;
         }
-        if (!isInstanceOf(value)) {
+        if (!instanceOf.apply(value)) {
             return false;
         }
-        for (var validation : validations) {
-            var castedValue = doCast(value);
-            if (!validation.test(castedValue)) {
-                return false;
-            }
-        }
-        return true;
+        return validations.stream().allMatch(validation -> validation.test(doCast.apply(value)));
     }
 
-    protected abstract boolean isInstanceOf(Object value);
+    protected final void addTest(Predicate<T> test) {
+        validations.add(test);
+    }
 
-    protected abstract T doCast(Object value);
+    protected final void setNotNull() {
+        isNullValid = false;
+    }
 }

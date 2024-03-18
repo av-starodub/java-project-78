@@ -1,104 +1,58 @@
 package hexlet.code.schema;
 
-import hexlet.code.Validator;
-import hexlet.code.schema.base.Schema;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class MapSchemaTest {
-    private final Validator validator;
+public final class MapSchemaTest extends BaseSchemaTest<MapSchema> {
 
-    public MapSchemaTest() {
-        validator = new Validator();
+    MapSchemaTest() {
+        super(new MapSchema());
     }
 
     @Test
-    public void shouldReturnTrueForNullValueIfMethodRequiredOff() {
-        var schema = validator.map();
-        var isValidNull = schema.isValid(null);
-        assertThat(isValidNull).isTrue();
-    }
-
-    @Test
-    public void shouldReturnFalseForAnotherInstance() {
-        var schema = validator.map();
-        var isValidSet = schema.isValid(new HashSet<>());
-        assertThat(isValidSet).isFalse();
-    }
-
-    @Test
-    public void shouldReturnFalseForNullValueIfMethodRequiredOn() {
-        var schema = validator.map();
-        var isValidNull = schema.required().isValid(null);
-        assertThat(isValidNull).isFalse();
-    }
-
-    @Test
-    public void shouldReturnTrueForMapInstanceValue() {
-        var schema = validator.map();
-        var isValidInstance = schema.isValid(new HashMap<>());
-        assertThat(isValidInstance).isTrue();
-    }
-
-    @Test
-    public void shouldReturnFalseIfMapSizeValueIsNotEqualWhichSetAsTarget() {
-        var schema = validator.map();
+    @DisplayName("checkSizeOf : should set minimum valid map size and check compliance with it")
+    public void checkSizeOf() {
         var data = new HashMap<String, String>();
-        boolean isValidSize;
 
-        data.put("key1", "value1");
-        isValidSize = schema.isValid(data);
-        assertThat(isValidSize).isTrue();
+        // by default any map size is valid
+        assertThat(schema.isValid(data)).isTrue();
 
-        var targetSize = 2;
-        isValidSize = schema.sizeof(targetSize).isValid(data);
-        assertThat(isValidSize).isFalse();
+        var schemaWithSizeOf = schema.sizeof(data.size() + 1);
+        assertThat(schemaWithSizeOf.isValid(data)).isFalse();
 
-        data.put("key2", "value2");
-        isValidSize = schema.isValid(data);
-        assertThat(isValidSize).isTrue();
+        data.put("key", "value");
+        assertThat(schemaWithSizeOf.isValid(data)).isTrue();
+    }
+    @Test
+    @DisplayName("")
+    void checkBuildValidations() {
+        var requirements = schema.required();
     }
 
     @Test
-    public void shouldCorrectlyValidateAllDataInsideTheMap() {
-        var schema = validator.map();
-        var schemas = new HashMap<String, Schema>();
-        schemas.put("name", validator.string().required());
-        schemas.put("age", validator.number().positive());
+    @DisplayName("checkShape : should set the requirements and check the data inside the card according to them")
+    public void checkShape() {
+        Map<String, BaseSchema<?>> requirements = new HashMap<>();
+        requirements.put("name", validator.string().required());
+        requirements.put("age", validator.number().positive());
 
-        var human1 = new HashMap<String, Object>();
-        human1.put("name", "Kolya");
-        var human1Age = 100;
-        human1.put("age", human1Age);
+        var schemaWithShape = schema.shape(requirements);
 
-        var isValidHuman1 = schema.shape(schemas).isValid(human1);
+        Map<String, Object> validPersonData = Map.of("name", "Kolya", "age", 1);
+        assertThat(schemaWithShape.isValid(validPersonData)).isTrue();
 
-        assertThat(isValidHuman1).isTrue();
+        Map<String, Object> invalidNamePersonData = Map.of("name", "", "age", 1);
+        assertThat(schemaWithShape.isValid(invalidNamePersonData)).isFalse();
 
-        var human2 = new HashMap<String, Object>();
-        human2.put("name", "Maya");
-        human2.put("age", null);
-        var isValidHuman2 = schema.isValid(human2);
+        Map<String, Object> invalidAgePersonData = Map.of("name", "Kolya", "age", -1);
+        assertThat(schemaWithShape.isValid(invalidAgePersonData)).isFalse();
 
-        assertThat(isValidHuman2).isTrue();
-
-        var human3 = new HashMap<String, Object>();
-        human3.put("name", "");
-        human3.put("age", null);
-        var isValidHuman3 = schema.isValid(human3);
-
-        assertThat(isValidHuman3).isFalse();
-
-        var human4 = new HashMap<String, Object>();
-        human4.put("name", "Valya");
-        var human4Age = -5;
-        human4.put("age", human4Age);
-        var isValidHuman4 = schema.isValid(human4);
-
-        assertThat(isValidHuman4).isFalse();
+        Map<String, Object> invalidAmountOfPersonData = Map.of("name", "Kolya");
+        assertThat(schemaWithShape.isValid(invalidAmountOfPersonData)).isFalse();
     }
 }

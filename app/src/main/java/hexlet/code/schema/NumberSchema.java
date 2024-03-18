@@ -3,26 +3,21 @@ package hexlet.code.schema;
 public final class NumberSchema extends BaseSchema<Integer> {
 
     public NumberSchema() {
-        super();
+        super(value -> (Integer) value, value -> value instanceof Integer);
+    }
+
+    public NumberSchema required() {
+        setNotNull();
+        return this;
     }
 
     public NumberSchema positive() {
-        validations.add(number -> number > 0);
+        addTest(number -> number > 0);
         return this;
     }
 
     public NumberSchema range(int start, int end) {
-        validations.add(number -> number >= start && number <= end);
+        addTest(number -> number >= start && number <= end);
         return this;
-    }
-
-    @Override
-    protected boolean isInstanceOf(Object value) {
-        return value instanceof Integer;
-    }
-
-    @Override
-    protected Integer doCast(Object value) {
-        return (Integer) value;
     }
 }

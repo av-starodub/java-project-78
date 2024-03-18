@@ -1,98 +1,54 @@
 package hexlet.code.schema;
 
-import hexlet.code.Validator;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class StringSchemaTest {
-    private final Validator validator;
+public final class StringSchemaTest extends BaseSchemaTest<StringSchema> {
+    private static final int MIN_LENGTH = 3;
 
     public StringSchemaTest() {
-        validator = new Validator();
+        super(new StringSchema());
     }
 
     @Test
-    public void shouldReturnTrueForEmptyStringIfMethodRequiredOff() {
-        var schema = validator.string();
-        boolean isValidEmpty = schema.isValid("");
-        assertThat(isValidEmpty).isTrue();
+    @DisplayName("checkRequiredEmptyString : ")
+    public void checkRequiredEmptyString() {
+        // by default null and empty string is valid
+        assertThat(schema.isValid("")).isTrue();
+        // when
+        var schemaWithRequired = schema.required();
+        // then
+        assertThat(schemaWithRequired.isValid("")).isFalse();
     }
 
     @Test
-    public void shouldReturnFalseForEmptyStringIfMethodRequiredOn() {
-        var schema = validator.string();
-        schema.required();
-        boolean isValidEmpty = schema.isValid("");
-        assertThat(isValidEmpty).isFalse();
+    @DisplayName("checkMinLLength : ")
+    void checkMinLLength() {
+        var schemaWithMinLength = schema.minLength(MIN_LENGTH);
+        assertThat(schemaWithMinLength.isValid("12")).isFalse();
+        assertThat(schemaWithMinLength.isValid("123")).isTrue();
     }
 
     @Test
-    public void shouldReturnTrueForNullValueIfMethodRequiredOff() {
-        var schema = validator.string();
-        boolean idValidNull = schema.isValid(null);
-        assertThat(idValidNull).isTrue();
+    @DisplayName("checkContains : ")
+    public void checkContains() {
+        assertThat(schema.isValid("what?")).isTrue();
+
+        schema.contains("wh");
+        assertThat(schema.isValid("what?")).isTrue();
+
+        schema.contains("what");
+        assertThat(schema.isValid("what?")).isTrue();
+
+        schema.contains("what does");
+        assertThat(schema.isValid("what?")).isFalse();
     }
 
     @Test
-    public void shouldReturnFalseForNullValueIfMethodRequiredOn() {
-        var schema = validator.string();
-        schema.required();
-        boolean idValidNull = schema.isValid(null);
-        assertThat(idValidNull).isFalse();
-    }
-
-    @Test
-    public void shouldReturnFalseIfArgumentDoesNotString() {
-        var schema = validator.string();
-        schema.required();
-        boolean idValidAnotherDataType = schema.isValid(5);
-        assertThat(idValidAnotherDataType).isFalse();
-    }
-
-    @Test
-    public void shouldReturnTrueIfStringContainsSubstring() {
-        var schema = validator.string();
-        schema.required();
-        boolean isContains = schema.contains("wh").isValid("what does the fox say");
-        assertThat(isContains).isTrue();
-    }
-
-    @Test
-    public void shouldReturnFalseIfStringShorterThanMinLength() {
-        var schema = validator.string();
-        schema.minLength(3);
-        boolean isValidMinLength = schema.isValid("12");
-        assertThat(isValidMinLength).isFalse();
-    }
-
-    @Test
-    public void shouldReturnTrueIfStringEqualsMinLength() {
-        var schema = validator.string();
-        schema.minLength(3);
-        boolean isValidMinLength = schema.minLength(3).isValid("123");
-        assertThat(isValidMinLength).isTrue();
-    }
-
-    @Test
-    public void shouldReturnTrueIfStringLongerMinLength() {
-        var schema = validator.string();
-        boolean isValidMinLength = schema.minLength(3).isValid("1234");
-        assertThat(isValidMinLength).isTrue();
-    }
-
-    @Test
-    public void shouldReturnFalseIfMethodContainsAlreadyReturnedFalseForThisString() {
-        var schema = validator.string();
-        schema.required();
-
-        boolean isValidBeforeFalseContains = schema.isValid("what does the fox say");
-        assertThat(isValidBeforeFalseContains).isTrue();
-
-        boolean isContains = schema.contains("whatthe").isValid("what does the fox say");
-        assertThat(isContains).isFalse();
-
-        boolean isValidAfterFalseContains = schema.isValid("what does the fox say");
-        assertThat(isValidAfterFalseContains).isFalse();
+    @DisplayName("")
+    void checkBuildValidations() {
+        var requirements = schema.required().minLength(MIN_LENGTH).contains("hex");
     }
 }

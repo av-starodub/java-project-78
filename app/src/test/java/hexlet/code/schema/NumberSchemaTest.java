@@ -1,31 +1,22 @@
 package hexlet.code.schema;
 
-import hexlet.code.Validator;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class NumberSchemaTest {
-    private final Validator validator;
-    private final int minOfRange = 5;
-    private final int maxOfRange = 10;
+public final class NumberSchemaTest extends BaseSchemaTest<NumberSchema> {
+    private static final int MIN_OF_RANGE = 5;
+    private static final int MAX_OF_RANGE = 10;
 
     public NumberSchemaTest() {
-        validator = new Validator();
+        super(new NumberSchema());
     }
 
     @Test
-    public void shouldReturnTrueForNullValueIfMethodRequiredOff() {
-        var schema = validator.number();
-        var isValidNull = schema.positive().isValid(null);
-        assertThat(isValidNull).isTrue();
-    }
-
-    @Test
-    public void shouldReturnFalseForNullValueIfMethodRequiredOn() {
-        var schema = validator.number();
-        var isValidNull = schema.required().isValid(null);
-        assertThat(isValidNull).isFalse();
+    @DisplayName("")
+    void checkBuildValidations() {
+        //var requirements = schema.required();
     }
 
     @Test
@@ -39,19 +30,20 @@ public final class NumberSchemaTest {
     @Test
     public void shouldReturnFalseForNegative() {
         var schema = validator.number();
-        var negative = -10;
+        var negative = -1;
         var isValidNegative = schema.positive().isValid(negative);
         assertThat(isValidNegative).isFalse();
     }
 
     @Test
-    public void shouldReturnTrueForPositiveNumber() {
+    @DisplayName("checkPositive : ")
+    public void checkPositive() {
         var schema = validator.number();
-        var positive = 10;
-        var isValidZero = schema.positive().isValid(positive);
-        assertThat(isValidZero).isTrue();
+        schema.positive();
+        assertThat(schema.isValid(1)).isTrue();
     }
 
+/*
     @Test
     public void shouldReturnFalseIfArgumentDoesNotNumber() {
         var schema = validator.number();
@@ -59,41 +51,42 @@ public final class NumberSchemaTest {
         var idValidAnotherDataType = schema.isValid("5");
         assertThat(idValidAnotherDataType).isFalse();
     }
+*/
 
     @Test
     public void shouldReturnTrueIfNumberInTargetRange() {
         var schema = validator.number();
-        var inRange = 7;
-        var isValidInRange = schema.range(minOfRange, maxOfRange).isValid(inRange);
+        var inRange = MIN_OF_RANGE + 1;
+        var isValidInRange = schema.range(MIN_OF_RANGE, MAX_OF_RANGE).isValid(inRange);
         assertThat(isValidInRange).isTrue();
     }
 
     @Test
     public void shouldReturnTrueIfNumberEqualsMinOfRange() {
         var schema = validator.number();
-        var isValidMinOfRange = schema.range(minOfRange, maxOfRange).isValid(minOfRange);
+        var isValidMinOfRange = schema.range(MIN_OF_RANGE, MAX_OF_RANGE).isValid(MIN_OF_RANGE);
         assertThat(isValidMinOfRange).isTrue();
     }
 
     @Test
     public void shouldReturnTrueIfNumberEqualsMaxOfRange() {
         var schema = validator.number();
-        var isValidMaxOfRange = schema.range(minOfRange, maxOfRange).isValid(maxOfRange);
+        var isValidMaxOfRange = schema.range(MIN_OF_RANGE, MAX_OF_RANGE).isValid(MAX_OF_RANGE);
         assertThat(isValidMaxOfRange).isTrue();
     }
 
     @Test
     public void shouldReturnFalseIfNumberOutOfRangeUp() {
         var schema = validator.number();
-        var outOfRangeUp = 11;
-        var isValidOutOfRange = schema.range(minOfRange, minOfRange).isValid(outOfRangeUp);
+        var outOfRangeUp = MAX_OF_RANGE + 1;
+        var isValidOutOfRange = schema.range(MIN_OF_RANGE, MAX_OF_RANGE).isValid(outOfRangeUp);
         assertThat(isValidOutOfRange).isFalse();
     }
     @Test
     public void shouldReturnFalseIfNumberOutOfRangeDown() {
         var schema = validator.number();
-        var outOfRangeDown = 3;
-        var isValidOutOfRange = schema.range(minOfRange, minOfRange).isValid(outOfRangeDown);
+        var outOfRangeDown = MIN_OF_RANGE - 1;
+        var isValidOutOfRange = schema.range(MIN_OF_RANGE, MAX_OF_RANGE).isValid(outOfRangeDown);
         assertThat(isValidOutOfRange).isFalse();
     }
 

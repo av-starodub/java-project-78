@@ -3,7 +3,7 @@ package hexlet.code.schema;
 public final class StringSchema extends BaseSchema<String> {
 
     public StringSchema() {
-        super();
+        super(value -> (String) value, value -> value instanceof String);
     }
 
     /**
@@ -12,28 +12,18 @@ public final class StringSchema extends BaseSchema<String> {
      * @return StringSchema instance.
      */
     public StringSchema required() {
-        super.required();
-        validations.add(string -> !string.isEmpty());
+        setNotNull();
+        addTest(string -> !string.isEmpty());
         return this;
     }
 
     public StringSchema minLength(int minimum) {
-        validations.add(string -> string.length() >= minimum);
+        addTest(string -> string.length() >= minimum);
         return this;
     }
 
     public StringSchema contains(String substring) {
-        validations.add(string -> string.contains(substring));
+        addTest(string -> string.contains(substring));
         return this;
-    }
-
-    @Override
-    protected boolean isInstanceOf(Object value) {
-        return value instanceof String;
-    }
-
-    @Override
-    protected String doCast(Object value) {
-        return (String) value;
     }
 }
