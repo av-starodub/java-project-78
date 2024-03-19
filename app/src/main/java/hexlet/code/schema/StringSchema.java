@@ -1,9 +1,26 @@
 package hexlet.code.schema;
 
+import hexlet.code.schema.base.BaseSchema;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
+import static java.util.Objects.nonNull;
+
 public final class StringSchema extends BaseSchema<String> {
+    private final List<Predicate<String>> schema;
 
     public StringSchema() {
-        super(value -> (String) value, value -> value instanceof String);
+        schema = new ArrayList<>();
+    }
+
+    @Override
+    public boolean isValid(Object value) {
+        if (nonNull(value) && !(value instanceof String)) {
+            return false;
+        }
+        return doCheck((String) value, schema);
     }
 
     /**
@@ -13,17 +30,17 @@ public final class StringSchema extends BaseSchema<String> {
      */
     public StringSchema required() {
         setNotNull();
-        addTest(string -> !string.isEmpty());
+        schema.add(string -> !string.isEmpty());
         return this;
     }
 
     public StringSchema minLength(int minimum) {
-        addTest(string -> string.length() >= minimum);
+        schema.add(string -> string.length() >= minimum);
         return this;
     }
 
     public StringSchema contains(String substring) {
-        addTest(string -> string.contains(substring));
+        schema.add(string -> string.contains(substring));
         return this;
     }
 }
