@@ -19,7 +19,7 @@ public final class StringSchemaTest {
     @Test
     @DisplayName("checkRequired : until the required() is called, null and the empty string are valid")
     public void checkRequired() {
-        // by default null and empty string is valid
+        // by default null and empty string are valid
         assertThat(schema.isValid(null)).isTrue();
         assertThat(schema.isValid("")).isTrue();
         // when
@@ -30,7 +30,7 @@ public final class StringSchemaTest {
     }
 
     @Test
-    @DisplayName("checkMinLLength : the string must be equal to or longer than the value set by sizeOf()")
+    @DisplayName("checkMinLLength : the string must be equal to or longer than the value set by minLength()")
     void checkMinLLength() {
         schema.minLength(MIN_LENGTH);
         assertThat(schema.isValid("12")).isFalse();

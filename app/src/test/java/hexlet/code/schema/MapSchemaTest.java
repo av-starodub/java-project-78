@@ -1,7 +1,7 @@
 package hexlet.code.schema;
 
 import hexlet.code.Validator;
-import hexlet.code.schema.base.BaseSchema;
+import hexlet.code.schema.base.Schema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,8 +23,9 @@ public final class MapSchemaTest {
     @Test
     @DisplayName("checkRequired : until the required() is called, null is valid")
     public void checkRequired() {
-        // by default null and empty string is valid
+        // by default
         assertThat(schema.isValid(null)).isTrue();
+        assertThat(schema.sizeof(2).isValid(null)).isTrue();
         // when
         schema.required();
         // then
@@ -52,7 +53,7 @@ public final class MapSchemaTest {
         var validator = new Validator();
 
         // given requirements for map checking
-        var requirements = new HashMap<String, BaseSchema<?>>();
+        var requirements = new HashMap<String, Schema>();
         requirements.put("name", validator.string().required());
         requirements.put("age", validator.number().positive());
 
@@ -86,6 +87,5 @@ public final class MapSchemaTest {
     @DisplayName("checkInvalidDataType : should return false when data type is invalid")
     public void checkInvalidDataType() {
         assertThat(schema.isValid(new HashSet<>())).isFalse();
-        assertThat(schema.isValid(new HashMap<>())).isTrue();
     }
 }

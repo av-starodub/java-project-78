@@ -1,18 +1,15 @@
 package hexlet.code.schema;
 
 import hexlet.code.schema.base.BaseSchema;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
+import hexlet.code.schema.base.Schema;
 
 import static java.util.Objects.nonNull;
 
-public final class NumberSchema extends BaseSchema<Integer> {
-    private final List<Predicate<Integer>> schema;
+public final class NumberSchema implements Schema {
+    private final BaseSchema<Integer> schema;
 
     public NumberSchema() {
-        schema = new ArrayList<>();
+        schema = new BaseSchema<>();
     }
 
     @Override
@@ -20,21 +17,21 @@ public final class NumberSchema extends BaseSchema<Integer> {
         if (nonNull(value) && !(value instanceof Integer)) {
             return false;
         }
-        return doCheck((Integer) value, schema);
+        return schema.doCheck((Integer) value);
     }
 
     public NumberSchema required() {
-        setNotNull();
+        schema.setNotNullRequired();
         return this;
     }
 
     public NumberSchema positive() {
-        schema.add(number -> number > 0);
+        schema.addTest(number -> number > 0);
         return this;
     }
 
     public NumberSchema range(int start, int end) {
-        schema.add(number -> number >= start && number <= end);
+        schema.addTest(number -> number >= start && number <= end);
         return this;
     }
 }

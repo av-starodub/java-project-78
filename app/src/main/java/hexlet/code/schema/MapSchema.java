@@ -1,19 +1,17 @@
 package hexlet.code.schema;
 
 import hexlet.code.schema.base.BaseSchema;
+import hexlet.code.schema.base.Schema;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import static java.util.Objects.nonNull;
 
-public final class MapSchema extends BaseSchema<Map<?, ?>> {
-    private final List<Predicate<Map<?, ?>>> schema;
+public final class MapSchema implements Schema {
+    private final BaseSchema<Map<?, ?>> schema;
 
     public MapSchema() {
-        schema = new ArrayList<>();
+        schema = new BaseSchema<>();
     }
 
     @Override
@@ -21,26 +19,26 @@ public final class MapSchema extends BaseSchema<Map<?, ?>> {
         if (nonNull(value) && !(value instanceof Map)) {
             return false;
         }
-        return doCheck((Map<?, ?>) value, schema);
+        return schema.doCheck((Map<?, ?>) value);
     }
 
     public MapSchema required() {
-        setNotNull();
+        schema.setNotNullRequired();
         return this;
     }
 
-    public MapSchema sizeof(int validMapSize) {
-        schema.add(map -> map.size() == validMapSize);
+    public MapSchema sizeof(int minSize) {
+        schema.addTest(map -> map.size() == minSize);
         return this;
     }
 
-    public MapSchema shape(Map<?, BaseSchema<?>> schemaMap) {
-        schema.add(map -> isValidInside(map, schemaMap));
+    public MapSchema shape(Map<?, Schema> requirements) {
+        schema.addTest(map -> isValidInside(map, requirements));
         return this;
     }
 
-    private boolean isValidInside(Map<?, ?> data, Map<?, BaseSchema<?>> schemaMap) {
-        return schemaMap.entrySet().stream()
+    private boolean isValidInside(Map<?, ?> data, Map<?, Schema> requirements) {
+        return requirements.entrySet().stream()
                 .allMatch(schemaEntry -> {
                     var requiredPropertyName = schemaEntry.getKey();
                     var propertyValue = data.get(requiredPropertyName);

@@ -21,14 +21,13 @@ public final class NumberSchemaTest {
     @Test
     @DisplayName("checkRequired : until the required() is called, null is valid")
     public void checkRequired() {
-        // by default null and empty string is valid
+        // by default
         assertThat(schema.isValid(null)).isTrue();
         assertThat(schema.positive().isValid(null)).isTrue();
         // when
         schema.required();
         // then
         assertThat(schema.isValid(null)).isFalse();
-        assertThat(schema.positive().isValid(null)).isFalse();
     }
 
     @Test

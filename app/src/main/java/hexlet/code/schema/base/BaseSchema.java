@@ -1,34 +1,43 @@
 package hexlet.code.schema.base;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 import static java.util.Objects.isNull;
 
 /**
- * Base class for implementing a data validation schema.
+ * The class for data validation.
  *
- * @param <T> data type for validation.
+ * @param <T> data type.
  */
-public abstract class BaseSchema<T> implements Schema {
+public final class BaseSchema<T> {
+    private final List<Predicate<T>> schema;
     private boolean isNullValid;
 
-    protected BaseSchema() {
+    public BaseSchema() {
+        schema = new ArrayList<>();
         isNullValid = true;
     }
 
-    protected final void setNotNull() {
+    /**
+     * Sets null as invalid.
+     */
+    public void setNotNullRequired() {
         isNullValid = false;
     }
 
+    public void addTest(Predicate<T> test) {
+        schema.add(test);
+    }
+
     /**
-     * Method for data validation.
+     * Validation method.
      *
-     * @param schema value requirements
-     * @param value  value to check
-     * @return true if the value has passed all assigned checks for a specific schema implementation.
+     * @param value data
+     * @return true if the value has passed all assigned checks.
      */
-    protected final boolean doCheck(T value, Collection<Predicate<T>> schema) {
+    public boolean doCheck(T value) {
         return isNull(value)
                 ? isNullValid
                 : schema.stream().allMatch(validation -> validation.test(value));
