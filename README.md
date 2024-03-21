@@ -4,50 +4,82 @@
 [![Java CI](https://github.com/av-starodub/java-project-78/actions/workflows/javaci.yml/badge.svg)](https://github.com/av-starodub/java-project-78/actions/workflows/javaci.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/c5080706082f1aa339c4/maintainability)](https://codeclimate.com/github/av-starodub/java-project-78/maintainability)
 [![codecov](https://codecov.io/github/av-starodub/java-project-78/branch/main/graph/badge.svg?token=D6t7Qh4d9y)](https://codecov.io/github/av-starodub/java-project-78)
+
 ### Описание
 
-Валидатор данных – библиотека, с помощью которой можно проверять корректность любых данных.
-За основу для проекта взята библиотека [yup](https://github.com/jquense/yup). 
-Интерфейс библиотеки для валидации – яркий пример DSL, специализированного языка, позволяющего декларативно
-(описательно) описывать то, что вы хотите от кода. Код, написанный в таком стиле, читается значительно легче,
-чем работа с прямым созданием объектов. Во многом этот подход базируется на паттерне fluent-интерфейс.
+Библиотека, с помощью которой можно проверять соответствие данных установленным требованиям. <br>
+За основу для проекта взята библиотека [yup](https://github.com/jquense/yup). <br>
+Интерфейс библиотеки сделан в декларативном стиле (DSL). <br>
+Реализация базируется на паттерне Fluent interface.
 
-Пример использования:
-```
+### Использование
+
+```java
 import hexlet.code.Validator;
 import hexlet.code.schema.StringSchema;
 import hexlet.code.schema.NumberSchema;
 import hexlet.code.schema.MapSchema;
 import hexlet.code.schema.base.Schema;
 
-Validator v = new Validator();
+class DataValidationExample {
 
-// строки
-StringSchema schema = v.string().required();
+    public static void main(String[] args) {
 
-schema.isValid("what does the fox say"); // true
-schema.isValid(""); // false
+        Validator validator = new Validator();
 
-// числа
-NumberSchema schema = v.number().required().positive();
+        // String
+        StringSchema stringSchema = validator.string();
 
-schema.isValid(-10); // false
-schema.isValid(10); // true
+        stringSchema.isValid(null); // true by default for all validators
+        stringSchema.isValid(""); // true by default for String
 
-// объект Map с поддержкой проверки структуры
-Map<String, BaseSchema> schemas = new HashMap<>();
-schemas.put("name", v.string().required());
-schemas.put("age", v.number().positive());
+        stringSchema.required(); // sets null and empty string as invalid
+        stringSchema.isValid(null); // false
+        stringSchema.isValid(""); // false
 
-MapSchema schema = v.map().sizeof(2).shape(schemas);
+        stringSchema.minLength(5).contains("wh"); // schema accumulate requirements
+        stringSchema.isValid("what"); // false because "what".length() < 5
+        stringSchema.isValid("valid length"); // false
+        stringSchema.isValid("what does the fox say"); // true
 
-Map<String, Object> human1 = new HashMap<>();
-human1.put("name", "Kolya");
-human1.put("age", 100);
-schema.isValid(human1); // true
+        // Number
+        NumberSchema numberSchema = validator.number();
 
-Map<String, Object> human2 = new HashMap<>();
-human2.put("name", "");
-human2.put("age", null);
-schema.isValid(human1); // false
+        numberSchema.required().positive();
+
+        numberSchema.isValid(null); // false
+        numberSchema.isValid(0); // false
+        numberSchema.isValid(-10); // false
+        numberSchema.isValid(10); // true
+
+        // Map
+        MapSchema schema = validator.map();
+
+        // check object Map 
+        schema.required().sizeof(2);
+        schema.isValid(new HashMap<>()); // false
+
+        // check map inside
+        // create requirements
+        Map<String, Schema> requirements = new HashMap<>();
+        requirements.put("name", validator.string().required());
+        requirements.put("age", validator.number().positive());
+
+        // add to schema 
+        schema.shape(requirements);
+
+        // validate
+        Map<String, Object> validPersonData = Map.of("name", "Dummy", "age", 10);
+        schema.isValid(validPersonData); // true
+
+        Map<String, Object> invalidNamePersonData = Map.of("name", "", "age", 10);
+        schema.isValid(invalidNamePersonData); // false
+
+        Map<String, Object> invalidAgePersonData = Map.of("name", "Dummy", "age", null);
+        schema.isValid(invalidAgePersonData); // false
+
+        Map<String, Object> notAllPersonData = Map.of("name", "Dummy");
+        schema.isValid(notAllPersonData); // false
+    }
+}
 ```
