@@ -19,7 +19,7 @@ import hexlet.code.Validator;
 import hexlet.code.schemas.StringSchema;
 import hexlet.code.schemas.NumberSchema;
 import hexlet.code.schemas.MapSchema;
-import hexlet.code.schemas.Schema;
+import hexlet.code.schemas.BaseSchema;
 
 class DataValidationExample {
 

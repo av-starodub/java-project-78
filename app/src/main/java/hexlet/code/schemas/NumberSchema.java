@@ -2,11 +2,11 @@ package hexlet.code.schemas;
 
 import static java.util.Objects.nonNull;
 
-public final class NumberSchema implements Schema {
-    private final BaseSchema<Integer> schema;
+public final class NumberSchema implements BaseSchema<Integer> {
+    private final GeneralSchema<Integer> schema;
 
     public NumberSchema() {
-        schema = new BaseSchema<>();
+        schema = new GeneralSchema<>(obj -> (Integer) obj);
     }
 
     @Override
@@ -14,7 +14,7 @@ public final class NumberSchema implements Schema {
         if (nonNull(value) && !(value instanceof Integer)) {
             return false;
         }
-        return schema.doCheck((Integer) value);
+        return schema.isValid(value);
     }
 
     public NumberSchema required() {

@@ -2,11 +2,11 @@ package hexlet.code.schemas;
 
 import static java.util.Objects.nonNull;
 
-public final class StringSchema implements Schema {
-    private final BaseSchema<String> schema;
+public final class StringSchema implements BaseSchema<String> {
+    private final GeneralSchema<String> schema;
 
     public StringSchema() {
-        schema = new BaseSchema<>();
+        schema = new GeneralSchema<>(obj -> (String) obj);
     }
 
     @Override
@@ -14,7 +14,7 @@ public final class StringSchema implements Schema {
         if (nonNull(value) && !(value instanceof String)) {
             return false;
         }
-        return schema.doCheck((String) value);
+        return schema.isValid(value);
     }
 
     /**

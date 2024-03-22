@@ -4,11 +4,11 @@ import java.util.Map;
 
 import static java.util.Objects.nonNull;
 
-public final class MapSchema implements Schema {
-    private final BaseSchema<Map<?, ?>> schema;
+public final class MapSchema implements BaseSchema<Map<?, ?>> {
+    private final GeneralSchema<Map<?, ?>> schema;
 
     public MapSchema() {
-        schema = new BaseSchema<>();
+        schema = new GeneralSchema<>(obj -> (Map<?, ?>) obj);
     }
 
     @Override
@@ -16,7 +16,7 @@ public final class MapSchema implements Schema {
         if (nonNull(value) && !(value instanceof Map)) {
             return false;
         }
-        return schema.doCheck((Map<?, ?>) value);
+        return schema.isValid(value);
     }
 
     public MapSchema required() {
@@ -29,12 +29,12 @@ public final class MapSchema implements Schema {
         return this;
     }
 
-    public MapSchema shape(Map<?, Schema> requirements) {
+    public MapSchema shape(Map<?, BaseSchema<?>> requirements) {
         schema.addTest(map -> isValidInside(map, requirements));
         return this;
     }
 
-    private boolean isValidInside(Map<?, ?> data, Map<?, Schema> requirements) {
+    private boolean isValidInside(Map<?, ?> data, Map<?, BaseSchema<?>> requirements) {
         return requirements.entrySet().stream()
                 .allMatch(schemaEntry -> {
                     var requiredPropertyName = schemaEntry.getKey();

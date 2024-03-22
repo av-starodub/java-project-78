@@ -52,7 +52,7 @@ public final class MapSchemaTest {
         var validator = new Validator();
 
         // given requirements for map checking
-        var requirements = new HashMap<String, Schema>();
+        var requirements = new HashMap<String, BaseSchema<?>>();
         requirements.put("name", validator.string().required());
         requirements.put("age", validator.number().positive());
 
