@@ -42,6 +42,9 @@ class DataValidationExample {
         stringSchema.isValid("valid length"); // false
         stringSchema.isValid("what does the fox say"); // true
 
+        // if one validator is called several times, then the last one takes precedence
+        stringSchema.minLength(3); // true
+
         // Number
         NumberSchema numberSchema = validator.number();
 

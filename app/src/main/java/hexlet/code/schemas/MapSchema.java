@@ -3,10 +3,10 @@ package hexlet.code.schemas;
 import java.util.Map;
 
 public final class MapSchema implements BaseSchema<Map<?, ?>> {
-    private final GeneralSchema<Map<?, ?>> schema;
+    private final GeneralizedSchema<Map<?, ?>> schema;
 
     public MapSchema() {
-        schema = new GeneralSchema<>(obj -> (Map<?, ?>) obj, obj -> obj instanceof Map<?, ?>);
+        schema = new GeneralizedSchema<>(obj -> (Map<?, ?>) obj, obj -> obj instanceof Map<?, ?>);
     }
 
     @Override
@@ -20,12 +20,12 @@ public final class MapSchema implements BaseSchema<Map<?, ?>> {
     }
 
     public MapSchema sizeof(int minSize) {
-        schema.addTest(map -> map.size() == minSize);
+        schema.addTest("sizeof", map -> map.size() == minSize);
         return this;
     }
 
     public MapSchema shape(Map<String, BaseSchema<String>> requirements) {
-        schema.addTest(map -> isValidInside(map, requirements));
+        schema.addTest("shape", map -> isValidInside(map, requirements));
         return this;
     }
 

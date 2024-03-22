@@ -1,10 +1,10 @@
 package hexlet.code.schemas;
 
 public final class NumberSchema implements BaseSchema<Integer> {
-    private final GeneralSchema<Integer> schema;
+    private final GeneralizedSchema<Integer> schema;
 
     public NumberSchema() {
-        schema = new GeneralSchema<>(obj -> (Integer) obj, obj -> obj instanceof Integer);
+        schema = new GeneralizedSchema<>(obj -> (Integer) obj, obj -> obj instanceof Integer);
     }
 
     @Override
@@ -18,12 +18,12 @@ public final class NumberSchema implements BaseSchema<Integer> {
     }
 
     public NumberSchema positive() {
-        schema.addTest(number -> number > 0);
+        schema.addTest("positive", number -> number > 0);
         return this;
     }
 
     public NumberSchema range(int start, int end) {
-        schema.addTest(number -> number >= start && number <= end);
+        schema.addTest("range", number -> number >= start && number <= end);
         return this;
     }
 }

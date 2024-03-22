@@ -1,10 +1,10 @@
 package hexlet.code.schemas;
 
 public final class StringSchema implements BaseSchema<String> {
-    private final GeneralSchema<String> schema;
+    private final GeneralizedSchema<String> schema;
 
     public StringSchema() {
-        schema = new GeneralSchema<>(obj -> (String) obj, obj -> obj instanceof String);
+        schema = new GeneralizedSchema<>(obj -> (String) obj, obj -> obj instanceof String);
     }
 
     @Override
@@ -19,17 +19,17 @@ public final class StringSchema implements BaseSchema<String> {
      */
     public StringSchema required() {
         schema.setNotNull();
-        schema.addTest(string -> !string.isEmpty());
+        schema.addTest("required", string -> !string.isEmpty());
         return this;
     }
 
     public StringSchema minLength(int minLength) {
-        schema.addTest(string -> string.length() >= minLength);
+        schema.addTest("minLength", string -> string.length() >= minLength);
         return this;
     }
 
     public StringSchema contains(String substring) {
-        schema.addTest(string -> string.contains(substring));
+        schema.addTest("contains", string -> string.contains(substring));
         return this;
     }
 }

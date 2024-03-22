@@ -56,9 +56,23 @@ public final class StringSchemaTest {
     @DisplayName("checkBuildValidations : schema should accumulate validations")
     void checkBuildValidations() {
         var stringSchema = schema.required().minLength(MIN_LENGTH).contains("hex");
+
         assertThat(stringSchema.isValid(null)).isFalse();
         assertThat(stringSchema.isValid("1")).isFalse();
         assertThat(stringSchema.isValid("hex")).isTrue();
+    }
+
+    @Test
+    @DisplayName("checkLastPrecedence : if one validator is called several times, then the last one takes precedence")
+    void checkLastOneTakesPrecedence() {
+        schema.required().minLength(MIN_LENGTH).contains("hex");
+        assertThat(schema.isValid("hex")).isTrue();
+
+        schema.minLength(MIN_LENGTH + 1);
+        assertThat(schema.isValid("hex")).isFalse();
+
+        schema.required().minLength(MIN_LENGTH).contains("hex");
+        assertThat(schema.isValid("hex")).isTrue();
     }
 
     @Test
