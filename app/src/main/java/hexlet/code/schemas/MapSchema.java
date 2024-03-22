@@ -2,25 +2,20 @@ package hexlet.code.schemas;
 
 import java.util.Map;
 
-import static java.util.Objects.nonNull;
-
 public final class MapSchema implements BaseSchema<Map<?, ?>> {
     private final GeneralSchema<Map<?, ?>> schema;
 
     public MapSchema() {
-        schema = new GeneralSchema<>(obj -> (Map<?, ?>) obj);
+        schema = new GeneralSchema<>(obj -> (Map<?, ?>) obj, obj -> obj instanceof Map<?, ?>);
     }
 
     @Override
     public boolean isValid(Object value) {
-        if (nonNull(value) && !(value instanceof Map)) {
-            return false;
-        }
         return schema.isValid(value);
     }
 
     public MapSchema required() {
-        schema.setNotNullRequired();
+        schema.setNotNull();
         return this;
     }
 

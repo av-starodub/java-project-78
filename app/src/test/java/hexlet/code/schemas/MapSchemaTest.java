@@ -24,19 +24,19 @@ public final class MapSchemaTest {
     public void checkRequired() {
         // by default
         assertThat(schema.isValid(null)).isTrue();
+        assertThat(schema.isValid(new HashSet<>())).isTrue();
         assertThat(schema.sizeof(2).isValid(null)).isTrue();
         // when
         schema.required();
         // then
         assertThat(schema.isValid(null)).isFalse();
+        assertThat(schema.isValid(new HashSet<>())).isFalse();
     }
 
     @Test
     @DisplayName("checkSizeOf : should set minimum valid map size and check compliance with it")
     public void checkSizeOf() {
         var data = new HashMap<String, String>();
-
-        // by default any map size is valid
         assertThat(schema.isValid(data)).isTrue();
 
         schema.sizeof(data.size() + 1);
@@ -63,13 +63,13 @@ public final class MapSchemaTest {
         Map<String, Object> validPersonData = Map.of("firstName", "John", "lastName", "Smith");
         assertThat(schema.isValid(validPersonData)).isTrue();
 
-        Map<String, Object> invalidValuePersonData = Map.of("name", "", "lastName", "");
+        Map<String, Object> invalidValuePersonData = Map.of("firstName", "", "lastName", "");
         assertThat(schema.isValid(invalidValuePersonData)).isFalse();
 
-        Map<String, Object> invalidValueLengthPersonData = Map.of("name", "John", "lastName", "A");
+        Map<String, Object> invalidValueLengthPersonData = Map.of("firstName", "John", "lastName", "A");
         assertThat(schema.isValid(invalidValueLengthPersonData)).isFalse();
 
-        Map<String, Object> notAllPersonData = Map.of("name", "John");
+        Map<String, Object> notAllPersonData = Map.of("firstName", "John");
         assertThat(schema.isValid(notAllPersonData)).isFalse();
     }
 
@@ -80,11 +80,5 @@ public final class MapSchemaTest {
         assertThat(mapSchema.isValid(null)).isFalse();
         assertThat(mapSchema.isValid(Map.of())).isFalse();
         assertThat(mapSchema.isValid(Map.of("key", ""))).isFalse();
-    }
-
-    @Test
-    @DisplayName("checkInvalidDataType : should return false when data type is invalid")
-    public void checkInvalidDataType() {
-        assertThat(schema.isValid(new HashSet<>())).isFalse();
     }
 }

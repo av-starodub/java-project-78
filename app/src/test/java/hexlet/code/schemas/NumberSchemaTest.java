@@ -19,15 +19,19 @@ public final class NumberSchemaTest {
     }
 
     @Test
-    @DisplayName("checkRequired : until the required() is called, null is valid")
+    @DisplayName("checkRequired : until the required() is called, null and other data type are valid")
     public void checkRequired() {
         // by default
         assertThat(schema.isValid(null)).isTrue();
+        assertThat(schema.isValid("5")).isTrue();
+        assertThat(schema.isValid(1.0)).isTrue();
         assertThat(schema.positive().isValid(null)).isTrue();
         // when
         schema.required();
         // then
         assertThat(schema.isValid(null)).isFalse();
+        assertThat(schema.isValid("5")).isFalse();
+        assertThat(schema.isValid(1.0)).isFalse();
     }
 
     @Test
@@ -67,12 +71,5 @@ public final class NumberSchemaTest {
         assertThat(numberSchema.isValid(-1)).isFalse();
         assertThat(numberSchema.isValid(MAX_OF_RANGE)).isTrue();
         assertThat(numberSchema.isValid(MAX_OF_RANGE + 1)).isFalse();
-    }
-
-    @Test
-    @DisplayName("checkInvalidDataType : should return false when data type is invalid")
-    public void checkInvalidDataType() {
-        assertThat(schema.isValid("5")).isFalse();
-        assertThat(schema.isValid(1.0)).isFalse();
     }
 }

@@ -1,19 +1,14 @@
 package hexlet.code.schemas;
 
-import static java.util.Objects.nonNull;
-
 public final class StringSchema implements BaseSchema<String> {
     private final GeneralSchema<String> schema;
 
     public StringSchema() {
-        schema = new GeneralSchema<>(obj -> (String) obj);
+        schema = new GeneralSchema<>(obj -> (String) obj, obj -> obj instanceof String);
     }
 
     @Override
     public boolean isValid(Object value) {
-        if (nonNull(value) && !(value instanceof String)) {
-            return false;
-        }
         return schema.isValid(value);
     }
 
@@ -23,7 +18,7 @@ public final class StringSchema implements BaseSchema<String> {
      * @return StringSchema.
      */
     public StringSchema required() {
-        schema.setNotNullRequired();
+        schema.setNotNull();
         schema.addTest(string -> !string.isEmpty());
         return this;
     }

@@ -18,18 +18,20 @@ public final class GeneralSchema<T> implements BaseSchema<T> {
      * for example if T is String - (obj) -> (String) obj.
      */
     private final Function<Object, T> doCast;
+    private final Function<Object, Boolean> instanceOf;
     private boolean isNullValid;
 
-    public GeneralSchema(Function<Object, T> doCst) {
+    public GeneralSchema(Function<Object, T> doCst, Function<Object, Boolean> instOf) {
         schema = new ArrayList<>();
         doCast = doCst;
+        instanceOf = instOf;
         isNullValid = true;
     }
 
     /**
      * Sets null as invalid.
      */
-    public void setNotNullRequired() {
+    public void setNotNull() {
         isNullValid = false;
     }
 
@@ -45,8 +47,12 @@ public final class GeneralSchema<T> implements BaseSchema<T> {
      */
     @Override
     public boolean isValid(Object value) {
+        if (isNullValid && schema.isEmpty()) {
+            return true;
+        }
         return isNull(value)
                 ? isNullValid
-                : schema.stream().allMatch(validation -> validation.test(doCast.apply(value)));
+                : instanceOf.apply(value)
+                && schema.stream().allMatch(validation -> validation.test(doCast.apply(value)));
     }
 }

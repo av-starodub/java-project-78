@@ -1,24 +1,19 @@
 package hexlet.code.schemas;
 
-import static java.util.Objects.nonNull;
-
 public final class NumberSchema implements BaseSchema<Integer> {
     private final GeneralSchema<Integer> schema;
 
     public NumberSchema() {
-        schema = new GeneralSchema<>(obj -> (Integer) obj);
+        schema = new GeneralSchema<>(obj -> (Integer) obj, obj -> obj instanceof Integer);
     }
 
     @Override
     public boolean isValid(Object value) {
-        if (nonNull(value) && !(value instanceof Integer)) {
-            return false;
-        }
         return schema.isValid(value);
     }
 
     public NumberSchema required() {
-        schema.setNotNullRequired();
+        schema.setNotNull();
         return this;
     }
 

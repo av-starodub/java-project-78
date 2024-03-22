@@ -64,6 +64,8 @@ public final class StringSchemaTest {
     @Test
     @DisplayName("checkInvalidDataType : should return false when data type is invalid")
     public void checkInvalidDataType() {
+        assertThat(schema.isValid(1)).isTrue();
+        schema.required();
         assertThat(schema.isValid(1)).isFalse();
     }
 }
