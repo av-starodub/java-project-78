@@ -61,24 +61,24 @@ class DataValidationExample {
 
         // check map inside
         // create requirements
-        Map<String, Schema> requirements = new HashMap<>();
-        requirements.put("name", validator.string().required());
-        requirements.put("age", validator.number().positive());
+        Map<String, BaseSchema<String>> requirements = new HashMap<>();
+        requirements.put("firstName", validator.string().required());
+        requirements.put("lastName", validator.string().required().minLength(2));
 
         // add to schema 
         schema.shape(requirements);
 
         // validate
-        Map<String, Object> validPersonData = Map.of("name", "Dummy", "age", 10);
+        Map<String, Object> validPersonData = Map.of("firstName", "John", "lastName", "Smith");
         schema.isValid(validPersonData); // true
 
-        Map<String, Object> invalidNamePersonData = Map.of("name", "", "age", 10);
-        schema.isValid(invalidNamePersonData); // false
+        Map<String, Object> invalidValuePersonData = Map.of("firstName", "", "lastName", "");
+        schema.isValid(invalidValuePersonData); // false
 
-        Map<String, Object> invalidAgePersonData = Map.of("name", "Dummy", "age", null);
-        schema.isValid(invalidAgePersonData); // false
+        Map<String, Object> invalidValueLengthPersonData = Map.of("firstName", "John", "lastName", "A");
+        schema.isValid(invalidValueLengthPersonData); // false
 
-        Map<String, Object> notAllPersonData = Map.of("name", "Dummy");
+        Map<String, Object> notAllPersonData = Map.of("firstName", "John");
         schema.isValid(notAllPersonData); // false
     }
 }

@@ -29,12 +29,12 @@ public final class MapSchema implements BaseSchema<Map<?, ?>> {
         return this;
     }
 
-    public MapSchema shape(Map<String, BaseSchema<?>> requirements) {
+    public MapSchema shape(Map<String, BaseSchema<String>> requirements) {
         schema.addTest(map -> isValidInside(map, requirements));
         return this;
     }
 
-    private boolean isValidInside(Map<?, ?> data, Map<?, BaseSchema<?>> requirements) {
+    private boolean isValidInside(Map<?, ?> data, Map<?, BaseSchema<String>> requirements) {
         return requirements.entrySet().stream()
                 .allMatch(schemaEntry -> {
                     var requiredPropertyName = schemaEntry.getKey();

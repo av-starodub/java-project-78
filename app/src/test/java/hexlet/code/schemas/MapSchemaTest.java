@@ -52,25 +52,25 @@ public final class MapSchemaTest {
         var validator = new Validator();
 
         // given requirements for map checking
-        var requirements = new HashMap<String, BaseSchema<?>>();
-        requirements.put("name", validator.string().required());
-        requirements.put("age", validator.number().positive());
+        var requirements = new HashMap<String, BaseSchema<String>>();
+        requirements.put("firstName", validator.string().required());
+        requirements.put("lastName", validator.string().required().minLength(2));
 
         // when
         schema.shape(requirements);
 
         // then
-        Map<String, Object> validPersonData = Map.of("name", "Kolya", "age", 1);
+        Map<String, Object> validPersonData = Map.of("firstName", "John", "lastName", "Smith");
         assertThat(schema.isValid(validPersonData)).isTrue();
 
-        Map<String, Object> invalidNamePersonData = Map.of("name", "", "age", 1);
-        assertThat(schema.isValid(invalidNamePersonData)).isFalse();
+        Map<String, Object> invalidValuePersonData = Map.of("name", "", "lastName", "");
+        assertThat(schema.isValid(invalidValuePersonData)).isFalse();
 
-        Map<String, Object> invalidAgePersonData = Map.of("name", "Kolya", "age", -1);
-        assertThat(schema.isValid(invalidAgePersonData)).isFalse();
+        Map<String, Object> invalidValueLengthPersonData = Map.of("name", "John", "lastName", "A");
+        assertThat(schema.isValid(invalidValueLengthPersonData)).isFalse();
 
-        Map<String, Object> invalidAmountOfPersonData = Map.of("name", "Kolya");
-        assertThat(schema.isValid(invalidAmountOfPersonData)).isFalse();
+        Map<String, Object> notAllPersonData = Map.of("name", "John");
+        assertThat(schema.isValid(notAllPersonData)).isFalse();
     }
 
     @Test
