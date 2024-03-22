@@ -29,7 +29,7 @@ public final class MapSchema implements BaseSchema<Map<?, ?>> {
         return this;
     }
 
-    public MapSchema shape(Map<?, BaseSchema<?>> requirements) {
+    public MapSchema shape(Map<String, BaseSchema<?>> requirements) {
         schema.addTest(map -> isValidInside(map, requirements));
         return this;
     }
