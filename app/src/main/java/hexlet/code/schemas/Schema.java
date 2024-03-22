@@ -1,4 +1,4 @@
-package hexlet.code.schema.base;
+package hexlet.code.schemas;
 
 public interface Schema {
 

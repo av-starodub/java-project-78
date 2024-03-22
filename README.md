@@ -16,10 +16,10 @@
 
 ```java
 import hexlet.code.Validator;
-import hexlet.code.schema.StringSchema;
-import hexlet.code.schema.NumberSchema;
-import hexlet.code.schema.MapSchema;
-import hexlet.code.schema.base.Schema;
+import hexlet.code.schemas.StringSchema;
+import hexlet.code.schemas.NumberSchema;
+import hexlet.code.schemas.MapSchema;
+import hexlet.code.schemas.Schema;
 
 class DataValidationExample {
 

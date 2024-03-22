@@ -1,7 +1,4 @@
-package hexlet.code.schema;
-
-import hexlet.code.schema.base.BaseSchema;
-import hexlet.code.schema.base.Schema;
+package hexlet.code.schemas;
 
 import static java.util.Objects.nonNull;
 
