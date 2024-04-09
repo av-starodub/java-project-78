@@ -1,35 +1,25 @@
 package hexlet.code.schemas;
 
-public final class StringSchema implements BaseSchema<String> {
-    private final GeneralizedSchema<String> schema;
+public final class StringSchema extends BaseSchema<String> {
 
-    public StringSchema() {
-        schema = new GeneralizedSchema<>(obj -> (String) obj, obj -> obj instanceof String);
-    }
-
-    @Override
-    public boolean isValid(Object value) {
-        return schema.isValid(value);
-    }
-
-    /**
-     * Sets null and empty string as invalid.
-     *
-     * @return StringSchema.
-     */
     public StringSchema required() {
-        schema.setNotNull();
-        schema.addTest("required", string -> !string.isEmpty());
+        setNotNull();
+        addTest("required", string -> !string.isEmpty());
         return this;
     }
 
     public StringSchema minLength(int minLength) {
-        schema.addTest("minLength", string -> string.length() >= minLength);
+        addTest("minLength", string -> string.length() >= minLength);
         return this;
     }
 
     public StringSchema contains(String substring) {
-        schema.addTest("contains", string -> string.contains(substring));
+        addTest("contains", string -> string.contains(substring));
         return this;
+    }
+
+    @Override
+    protected String cast(Object obj) {
+        return obj instanceof String ? (String) obj : null;
     }
 }

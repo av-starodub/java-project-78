@@ -2,30 +2,20 @@ package hexlet.code.schemas;
 
 import java.util.Map;
 
-public final class MapSchema implements BaseSchema<Map<?, ?>> {
-    private final GeneralizedSchema<Map<?, ?>> schema;
-
-    public MapSchema() {
-        schema = new GeneralizedSchema<>(obj -> (Map<?, ?>) obj, obj -> obj instanceof Map<?, ?>);
-    }
-
-    @Override
-    public boolean isValid(Object value) {
-        return schema.isValid(value);
-    }
+public final class MapSchema extends BaseSchema<Map<?, ?>> {
 
     public MapSchema required() {
-        schema.setNotNull();
+        setNotNull();
         return this;
     }
 
     public MapSchema sizeof(int minSize) {
-        schema.addTest("sizeof", map -> map.size() == minSize);
+        addTest("sizeof", map -> map.size() == minSize);
         return this;
     }
 
     public MapSchema shape(Map<String, BaseSchema<String>> requirements) {
-        schema.addTest("shape", map -> isValidInside(map, requirements));
+        addTest("shape", map -> isValidInside(map, requirements));
         return this;
     }
 
@@ -37,5 +27,10 @@ public final class MapSchema implements BaseSchema<Map<?, ?>> {
                     var valueRequirements = schemaEntry.getValue();
                     return data.containsKey(requiredPropertyName) && valueRequirements.isValid(propertyValue);
                 });
+    }
+
+    @Override
+    protected Map<?, ?> cast(Object obj) {
+        return obj instanceof Map<?, ?> ? (Map<?, ?>) obj : null;
     }
 }
